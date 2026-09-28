@@ -1,0 +1,5 @@
+name = "lemma-cmd"
+defaultTargets = ["LemmaCmd"]
+
+[[lean_lib]]
+name = "LemmaCmd"

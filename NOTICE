@@ -1,0 +1,18 @@
+lean-metrics
+Copyright (c) 2026 Axiom Math
+
+This product includes work derived from the following projects, all released under the
+Apache License, Version 2.0:
+
+* Lean 4 (https://github.com/leanprover/lean4), Lake's `shake` command,
+  Copyright (c) 2023 Mario Carneiro, Sebastian Ullrich. The unused-import analysis
+  (LeanMetrics/Shake.lean) follows `Lake/CLI/Shake.lean`.
+
+* import-graph (https://github.com/leanprover-community/import-graph),
+  Copyright (c) 2023 Kim Morrison. The computation of the modules a module's constants
+  transitively require (LeanMetrics/Metrics/Imports.lean) follows its
+  `Environment.transitivelyRequiredModules'`.
+
+* lean-graph (https://github.com/aurasoph/lean-graph), Copyright (c) 2024 Evan Wang. The rules
+  for which constants are declarations of their own, and how edges through generated constants
+  are redirected (LeanMetrics/Metrics/Graph.lean), follow its dependency-graph filtering.

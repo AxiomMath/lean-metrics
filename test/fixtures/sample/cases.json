@@ -1,0 +1,80 @@
+[
+  {
+    "args": [
+      "--metric",
+      "nope"
+    ],
+    "exit": 2
+  },
+  {
+    "args": [
+      "--lib",
+      "Nope"
+    ],
+    "exit": 2
+  },
+  {
+    "args": [
+      "--frobnicate"
+    ],
+    "exit": 1
+  },
+  {
+    "args": [
+      "--metric",
+      "loc,loc"
+    ],
+    "exit": 0,
+    "expect": {
+      "metrics": {
+        "loc": {
+          "loc": 86
+        }
+      }
+    }
+  },
+  {
+    "args": [
+      "--metric",
+      "tactics",
+      "--details"
+    ],
+    "exit": 0,
+    "expect": {
+      "details": {
+        "tactics": {
+          "histogram": [
+            {
+              "tactic": "decide",
+              "calls": 2
+            },
+            {
+              "tactic": "exact",
+              "calls": 2
+            },
+            {
+              "tactic": "trivial",
+              "calls": 2
+            },
+            {
+              "tactic": "have",
+              "calls": 1
+            },
+            {
+              "tactic": "obtain",
+              "calls": 1
+            },
+            {
+              "tactic": "omega",
+              "calls": 1
+            },
+            {
+              "tactic": "simp",
+              "calls": 1
+            }
+          ]
+        }
+      }
+    }
+  }
+]

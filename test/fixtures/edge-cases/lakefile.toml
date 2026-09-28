@@ -1,0 +1,5 @@
+name = "edge-cases"
+defaultTargets = ["Edge"]
+
+[[lean_lib]]
+name = "Edge"

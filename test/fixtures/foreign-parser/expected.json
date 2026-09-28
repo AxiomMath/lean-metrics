@@ -1,0 +1,15 @@
+{
+  "metrics": {
+    "declarations": {
+      "n_theorem": 1
+    },
+    "proof_length": {
+      "n_proofs": 1
+    }
+  },
+  "diagnostics": {
+    "reparsed_files": [
+      "Case/A.lean"
+    ]
+  }
+}

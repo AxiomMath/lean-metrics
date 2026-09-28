@@ -1,0 +1,8 @@
+{
+  "metrics": {
+    "dep_graph": {
+      "has_cycle": true,
+      "longest_pole": 1
+    }
+  }
+}

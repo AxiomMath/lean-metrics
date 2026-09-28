@@ -1,0 +1,9 @@
+{
+  "metrics": {
+    "declarations": {"n_theorem": 2, "n_def": 1},
+    "proof_mode": {"n_pm_term": 1, "n_pm_tactic": 1},
+    "attributes": {"attr_simp": 1},
+    "tactics": {"tactic_omega": 1}
+  },
+  "diagnostics": {"commands_with_parse_errors": []}
+}

@@ -1,0 +1,35 @@
+{
+  "metrics": {
+    "loc": {
+      "loc": 22
+    },
+    "files": {
+      "n_files": 5,
+      "file_loc_mean": 4.4,
+      "file_loc_median": 3
+    },
+    "comments": {
+      "n_comments": 5,
+      "n_doc_comments": 2,
+      "comment_loc": 5,
+      "comment_loc_share": 0.227
+    },
+    "namespaces": {
+      "n_ns_cmds": 4,
+      "n_ns_sections": 1,
+      "n_ns_distinct": 4,
+      "n_ns_max_depth": 2
+    },
+    "source_shape": {
+      "shp_line_len_max": 47,
+      "shp_theorems_per_file": 0.2,
+      "shp_frac_files_module_doc": 0.2,
+      "shp_decl_name_len_max": 6
+    }
+  },
+  "diagnostics": {
+    "reparsed_files": [],
+    "scoping_command_errors": [],
+    "unreadable_files": []
+  }
+}

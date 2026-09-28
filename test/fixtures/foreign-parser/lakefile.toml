@@ -1,0 +1,4 @@
+name = "foreign-parser"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

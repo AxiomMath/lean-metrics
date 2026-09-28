@@ -1,0 +1,19 @@
+[
+  {
+    "args": [
+      "--metric",
+      "dep_graph",
+      "--main",
+      "p"
+    ],
+    "exit": 0,
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "root": "p",
+          "reachable_from_root": 2
+        }
+      }
+    }
+  }
+]

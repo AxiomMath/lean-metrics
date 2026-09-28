@@ -1,0 +1,25 @@
+name = "leanMetrics"
+version = "0.1.0"
+description = "Source and dependency-structure metrics for a Lean 4 Lake project."
+license = "Apache-2.0"
+licenseFiles = ["LICENSE", "NOTICE"]
+defaultTargets = ["lean-metrics"]
+testDriver = "test"
+
+[[require]]
+name = "Cli"
+scope = "leanprover"
+rev = "v4.34.0"
+
+[[lean_lib]]
+name = "LeanMetrics"
+
+[[lean_exe]]
+name = "lean-metrics"
+root = "Main"
+# Loading a project's environment runs its initializers, which needs the interpreter.
+supportInterpreter = true
+
+[[lean_exe]]
+name = "test"
+root = "Test"

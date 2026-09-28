@@ -1,0 +1,8 @@
+{
+  "metrics": {
+    "import_minimizability": {
+      "n_impmin_removable_imports": 0,
+      "n_impmin_imports_to_add": 0
+    }
+  }
+}

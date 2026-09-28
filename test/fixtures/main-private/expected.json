@@ -1,0 +1,8 @@
+{
+  "metrics": {
+    "dep_graph": {
+      "root": "q",
+      "reachable_from_root": 3
+    }
+  }
+}

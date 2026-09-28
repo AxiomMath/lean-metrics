@@ -1,0 +1,12 @@
+{
+  "metrics": {
+    "declarations": {
+      "n_theorem": 1
+    }
+  },
+  "diagnostics": {
+    "reparsed_files": [
+      "Case.lean"
+    ]
+  }
+}

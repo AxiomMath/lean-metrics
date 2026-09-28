@@ -1,0 +1,4 @@
+name = "shake-keep-kind"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

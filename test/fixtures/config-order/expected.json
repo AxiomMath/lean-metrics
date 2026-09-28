@@ -1,0 +1,9 @@
+{
+  "metrics": {
+    "decide_usage": {
+      "n_dec_kernel": 1,
+      "n_dec_decide": 2,
+      "n_dec_simp_arith": 1
+    }
+  }
+}

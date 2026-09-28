@@ -1,0 +1,4 @@
+name = "expansion-chain"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

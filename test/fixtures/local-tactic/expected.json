@@ -1,0 +1,11 @@
+{
+  "metrics": {
+    "tactics": {
+      "n_tactic_calls": 1,
+      "n_distinct_tactics": 1
+    },
+    "proof_size": {
+      "ps_calls_max": 1
+    }
+  }
+}

@@ -1,0 +1,4 @@
+name = "mutual-cycle"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

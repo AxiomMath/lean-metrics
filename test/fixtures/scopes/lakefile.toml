@@ -1,0 +1,5 @@
+name = "scopes"
+defaultTargets = ["Scopes"]
+
+[[lean_lib]]
+name = "Scopes"
