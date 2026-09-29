@@ -1,0 +1,5 @@
+name = "proof-wrappers"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

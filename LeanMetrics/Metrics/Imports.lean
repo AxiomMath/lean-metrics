@@ -188,7 +188,9 @@ def importMinimizability : Metric where
     let nAdd := total (·.add)
     let byModule (f : Shake.Verdict → Array Import) := Json.mkObj <| verdicts.toList.filterMap
       fun (i, v) => let is := authored f i v
-        if is.isEmpty then none else some (vnames[i]!.toString, toJson (is.map toString))
+        let render (imp : Import) := if view.header.moduleData[i]!.isModule then toString imp
+          else s!"import {imp.module}"
+        if is.isEmpty then none else some (vnames[i]!.toString, toJson (is.map render))
     -- the same count, from constants alone
     let closure := transitiveImports env
     let required := requiredModules env own

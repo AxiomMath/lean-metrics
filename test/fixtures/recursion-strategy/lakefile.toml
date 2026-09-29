@@ -1,0 +1,5 @@
+name = "recursion-strategy"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

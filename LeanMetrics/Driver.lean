@@ -42,10 +42,10 @@ partial def Output.render (o : Output) (indent : String := "") : String :=
 
 /-- Version of the output format, raised whenever a column is renamed, removed or changes
 meaning. -/
-def schemaVersion : Nat := 1
+def schemaVersion : Nat := 2
 
 /-- The version of `lean-metrics`, reported in its output. -/
-def toolVersion : String := "0.1.0"
+def toolVersion : String := "0.2.0"
 
 /-- What to measure and how to report it. -/
 structure Options where

@@ -36,7 +36,9 @@ every module they import from the project itself. Dependencies such as Mathlib a
 measured.
 
 Alternatively, `lean-metrics.sh` does both steps: run from the root of a project, it builds the
-project, builds `lean-metrics` with the same toolchain, and runs it.
+project, builds `lean-metrics` with the same toolchain, and runs it. This checkout supports Lean
+`v4.34.0`; the wrapper changes the selected toolchain but does not port Lean API usage or dependency
+versions to other releases.
 ```sh
 ../lean-metrics/lean-metrics.sh > metrics.json
 ```
@@ -55,7 +57,7 @@ monorepo, for example `--module MyMonorepo.ProjectA`, and loads only what those 
 `--metric M,N` runs only these metrics; `--list` lists all of them with a one-line description.
 
 `--details` adds structured detail to the document, such as the tactic histogram, the dependency
-graph's edges, and the imports `lake shake` would remove and add in each module.
+graph's nodes and edges, and the imports `lake shake` would remove and add in each module.
 
 `--main A,B` names the project's main results, as they are written in the source. The dependency
 graph (`dep_graph`) is measured from the largest of them; by default, from the largest declaration

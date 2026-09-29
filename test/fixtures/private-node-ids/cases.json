@@ -1,0 +1,63 @@
+[
+  {
+    "args": [
+      "--main",
+      "resultA",
+      "--metric",
+      "dep_graph",
+      "--details"
+    ],
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "root": "resultA",
+          "root_id": "resultA",
+          "reachable_from_root": 2
+        }
+      },
+      "details": {
+        "dep_graph": {
+          "edges": [
+            [
+              "_private.Case.A.0.helper",
+              "resultA"
+            ],
+            [
+              "_private.Case.B.0.helper",
+              "resultB"
+            ]
+          ]
+        }
+      }
+    },
+    "exit": 0
+  },
+  {
+    "args": [
+      "--main",
+      "_private.Case.A.0.helper",
+      "--metric",
+      "dep_graph"
+    ],
+    "exit": 0,
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "root": "helper",
+          "root_id": "_private.Case.A.0.helper",
+          "reachable_from_root": 1
+        }
+      }
+    }
+  },
+  {
+    "args": [
+      "--main",
+      "helper",
+      "--metric",
+      "dep_graph"
+    ],
+    "exit": 2,
+    "expect": null
+  }
+]

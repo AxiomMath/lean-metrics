@@ -120,7 +120,15 @@ def bodyOf? (decl : Syntax) : Option Syntax :=
     | some e => some e[0][0]
     | none => none
 
-/-- Whether a body is a tactic block (`:= by …`). -/
+/-- Remove wrappers that do not change a proof's tactic/term mode. Keep the original syntax
+for source size and `by` depth: treating a wrapper as a `by` node would count it twice. -/
+partial def unwrapProof (body : Syntax) : Syntax :=
+  if body.isOfKind ``Term.paren || body.isOfKind ``Term.typeAscription then unwrapProof body[1]
+  else if body.isOfKind ``Term.set_option then unwrapProof body[5]
+  else if body.isOfKind ``Term.open then unwrapProof body[3]
+  else body
+
+/-- Whether this syntax node itself is a tactic block. -/
 def isTacticBody (body : Syntax) : Bool :=
   body.isOfKind ``Term.byTactic || body.isOfKind ``Term.byTactic'
 

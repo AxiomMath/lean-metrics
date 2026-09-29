@@ -1,0 +1,40 @@
+[
+  {
+    "args": [
+      "--module",
+      "Case.Structural",
+      "--metric",
+      "recursion_style"
+    ],
+    "expect": {
+      "metrics": {
+        "recursion_style": {
+          "n_rec_termination_by": 1,
+          "n_rec_decreasing_by": 0,
+          "n_rec_well_founded": 0,
+          "rec_uses_well_founded": false
+        }
+      }
+    },
+    "exit": 0
+  },
+  {
+    "args": [
+      "--module",
+      "Case.Inferred",
+      "--metric",
+      "recursion_style"
+    ],
+    "expect": {
+      "metrics": {
+        "recursion_style": {
+          "n_rec_termination_by": 0,
+          "n_rec_decreasing_by": 0,
+          "n_rec_well_founded": 1,
+          "rec_uses_well_founded": true
+        }
+      }
+    },
+    "exit": 0
+  }
+]

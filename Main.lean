@@ -45,7 +45,7 @@ def runCmd (p : Parsed) : IO UInt32 := do
 
 /-- The command line of `lean-metrics`. -/
 def cmd : Cmd := `[Cli|
-  "lean-metrics" VIA runCmd; ["0.1.0"]
+  "lean-metrics" VIA runCmd; ["0.2.0"]
   "Measure a built Lake project: size, declarations, proofs, tactics, imports, dependency \
   structure, documentation and build warnings. Run `lake build` in the project first."
 

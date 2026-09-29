@@ -1,0 +1,6 @@
+name = "legacy-imports"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"
+roots = ["Case", "Umbrella", "Kept", "Dropped"]

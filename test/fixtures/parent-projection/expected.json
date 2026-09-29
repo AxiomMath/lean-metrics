@@ -1,0 +1,10 @@
+{
+  "metrics": {
+    "dep_graph": {
+      "n_graph_decls": 2
+    },
+    "docstrings": {
+      "n_doc_decls": 2
+    }
+  }
+}

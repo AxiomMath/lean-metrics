@@ -65,6 +65,46 @@ def check (exe : FilePath) (dir : FilePath) (c : Case) : IO (Array String) := do
   | .ok actual =>
     return if c.expect.isNull then #[] else (mismatches "" c.expect actual).map (label ++ ·)
 
+/-- The exported graph must preserve two private helpers with the same readable name and an
+isolated node, so consumers can reconstruct the graph without conflating identities. -/
+def checkGraphIds (exe : FilePath) : IO Unit := do
+  let out ← run exe.toString #["--root", (fixtures / "private-node-ids").toString,
+    "--metric", "dep_graph", "--details"]
+  unless out.exitCode == 0 do throw <| .userError out.stderr
+  let doc ← IO.ofExcept <| Json.parse out.stdout
+  let graph ← IO.ofExcept <| doc.getObjVal? "details" >>= (·.getObjVal? "dep_graph")
+  let nodes ← IO.ofExcept <| graph.getObjValAs? (Array Json) "nodes"
+  let ids ← nodes.mapM fun n => IO.ofExcept <| n.getObjValAs? String "id"
+  let names ← nodes.mapM fun n => IO.ofExcept <| n.getObjValAs? String "name"
+  unless ids.size == 5 && ids.toList.eraseDups.length == 5 && ids.contains "isolated" &&
+      (names.filter (· == "helper")).size == 2 do
+    throw <| .userError "graph nodes lost a private identity or isolated declaration"
+  let edges ← IO.ofExcept <| graph.getObjValAs? (Array (Array String)) "edges"
+  unless edges.all (fun e => e.size == 2 && e.all ids.contains) do
+    throw <| .userError "graph edge endpoint is missing from nodes"
+
+/-- Apply the exact emitted directives, then let Lean check them. Always restore the fixture. -/
+def checkImportReplacement (exe : FilePath) : IO Unit := do
+  let dir := fixtures / "legacy-imports"
+  let out ← run exe.toString #["--root", dir.toString, "--module", "Case",
+    "--metric", "import_minimizability", "--details"]
+  unless out.exitCode == 0 do throw <| .userError out.stderr
+  let doc ← IO.ofExcept <| Json.parse out.stdout
+  let detail ← IO.ofExcept <| doc.getObjVal? "details" >>= (·.getObjVal? "import_minimizability")
+  let removed ← IO.ofExcept <| detail.getObjVal? "remove_by_module" >>=
+    (·.getObjValAs? (Array String) "Case")
+  let added ← IO.ofExcept <| detail.getObjVal? "add_by_module" >>=
+    (·.getObjValAs? (Array String) "Case")
+  let file := dir / "Case.lean"
+  let original ← IO.FS.readFile file
+  let body := removed.foldl (fun s imp => s.replace (imp ++ "\n") "") original
+  try
+    IO.FS.writeFile file ("\n".intercalate added.toList ++ "\n" ++ body)
+    runOk "lake" #["build"] dir
+  finally
+    IO.FS.writeFile file original
+    runOk "lake" #["build"] dir
+
 def main : IO UInt32 := do
   runOk "lake" #["build", "lean-metrics"]
   let exe := (← IO.currentDir) / ".lake" / "build" / "bin" / "lean-metrics"
@@ -87,6 +127,10 @@ def main : IO UInt32 := do
       failed := failed + 1
       IO.println s!"FAIL  {dir.fileName}"
       for p in problems do IO.println s!"       {p}"
+  checkGraphIds exe
+  IO.println "ok    unique graph IDs and isolated nodes"
+  checkImportReplacement exe
+  IO.println "ok    emitted legacy imports compile"
   -- a source touched but unchanged is still what Lake built from
   let dir := fixtures / "scopes"
   runOk "touch" #[(dir / "Scopes" / "A.lean").toString]

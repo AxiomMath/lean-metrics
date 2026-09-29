@@ -7,7 +7,6 @@ module
 
 public import Lean.Environment
 import Lean.AuxRecursor
-import Lean.Class
 import Lean.DeclarationRange
 import Lean.Meta.Match.MatcherInfo
 import Lean.ProjFns
@@ -38,26 +37,10 @@ For example a constructor, a `where` helper, a `deriving` instance, or a parser 
 def hasOwnDeclaration (env : Environment) (n : Name) : Bool :=
   (declRangeExt.find? env n).isSome && !sameOrigin env n n.getPrefix
 
-/-- Whether structure `s` has `target` among its ancestors. -/
-partial def hasAncestor (env : Environment) (s target : Name) (visited : NameSet := {}) : Bool :=
-  if visited.contains s then false
-  else (getStructureInfo? env s).any fun info =>
-    info.parentInfo.any fun p =>
-      p.structName == target || hasAncestor env p.structName target (visited.insert s)
-
-/-- Whether `n` converts a structure to one it builds on: the coercion `extends` generates, or a
-`toX` in the structure's namespace when the structure is a class or `X` is an ancestor
-(`Field.toSemifield`). -/
+/-- Whether `n` is a parent projection registered by `extends`. Names alone are not evidence:
+an author can write an ordinary function such as `Box.toNat` in a class namespace. -/
 def isParentProjection (env : Environment) (n : Name) : Bool :=
-  match getStructureInfo? env n.getPrefix, n with
-  | none, _ => false
-  | some info, .str p s =>
-    info.parentInfo.any (·.projFn == n) ||
-      (s.startsWith "to" && s.length > 2 &&
-        let target := (s.drop 2).toString
-        (target.startsWith "OfNat" && target.any Char.isDigit) || isClass env p ||
-          (getStructureInfo? env (.mkSimple target)).isSome && hasAncestor env p (.mkSimple target))
-  | some info, _ => info.parentInfo.any (·.projFn == n)
+  (getStructureInfo? env n.getPrefix).any fun info => info.parentInfo.any (·.projFn == n)
 
 /-- Namespaces of tactic implementations. -/
 def tacticNamespaces : List Name :=

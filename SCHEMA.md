@@ -1,4 +1,4 @@
-# `lean-metrics` output format: version 1
+# `lean-metrics` output format: version 2
 
 `lean-metrics` writes one JSON object. It begins with version information for the format, the tool
 and Lean, and a description of the project, followed by the metrics:
@@ -33,6 +33,11 @@ and, within a metric, in the order its columns are listed below.
 
 `schema_version` is raised whenever a column is renamed, removed, or changes meaning. Adding a
 column or a metric does not raise it.
+
+Version 2 corrects instance declaration counts and well-founded recursion counts. It also fixes
+proof-wrapper classification, authored declarations with `to…` names, and local instance kinds.
+Graph detail edges now use unique declaration IDs; use each node's `name` for display. Consumers
+comparing results with version 1 should remeasure their baseline.
 
 ## What is measured
 
@@ -80,14 +85,16 @@ the order statistics at rank `1 + p(n-1)/100`. A ratio with a zero denominator i
 ### `declarations`
 - `n_theorem` (theorems and `lemma`s), `n_def`, `n_abbrev`, `n_instance`, `n_structure`, `n_class`
   (`class` and `class inductive`), `n_inductive`, `n_axiom`, `n_opaque`, `n_example`: counts by
-  kind. `n_instance` also counts instances declared by `deriving` clauses (one per class and type)
-  and `attribute [instance]` commands.
+  kind. `n_instance` also counts instances declared by `deriving` clauses (one per class and type).
+  Registering an existing declaration with `attribute [instance]` does not create a declaration.
 - `n_decls`: all of the above except `example`.
 - `n_def_like`: `def`, `abbrev`, `class`, `structure`, `inductive` and `instance` together.
 - `def_like_to_theorem_ratio`: `n_def_like` over `n_theorem`.
 - `n_decls_implicit_args`: declarations whose signature has an implicit (`{…}`) or strict-implicit
   (`⦃…⦄`) binder group. `variable` binders do not count.
 - `n_new_classes`, `n_new_instances`: same as `n_class` and `n_instance`.
+- `n_instance_attribute_commands`: commands applying `[instance]`, regardless of how many names
+  each command registers. These do not contribute to `n_decls` or `n_new_instances`.
 
 ### `implicit_args`
 - `n_ia_explicit`, `n_ia_implicit`, `n_ia_strict`, `n_ia_inst`: binder groups in declaration
@@ -96,7 +103,8 @@ the order statistics at rank `1 + p(n-1)/100`. A ratio with a zero denominator i
 
 ### `proof_mode`
 - `n_pm_tactic`, `n_pm_term`: theorems proved by a tactic block (`:= by …`), and all others, which
-  includes pattern-matching alternatives.
+  includes pattern-matching alternatives. Parentheses, type ascriptions, `set_option … in` and
+  `open … in` around a proof do not change its mode.
 - `pm_term_ratio`: share of theorems proved by a term.
 
 ### `reducibility`
@@ -106,7 +114,10 @@ the order statistics at rank `1 + p(n-1)/100`. A ratio with a zero denominator i
 
 ### `recursion_style`
 - `n_rec_termination_by`, `n_rec_decreasing_by`: clauses giving a termination measure or proof.
-- `n_rec_well_founded`: their sum; `rec_uses_well_founded`: whether it is positive.
+- `n_rec_well_founded`: authored definitions compiled with well-founded recursion, identified
+  by Lean's well-founded equation metadata. Inferred termination measures count; explicitly
+  structural recursion does not. Each definition counts once even if it has both annotations.
+- `rec_uses_well_founded`: whether `n_rec_well_founded` is positive.
 
 ### `tactics`
 A tactic call is a syntax node whose kind is in the environment's `tactic` category. That includes
@@ -132,7 +143,8 @@ theorem bodies.
 - `n_dec_native_decide`: `native_decide` calls; `dec_uses_native_decide`: whether there are any.
 - `n_dec_simp_arith`: `simp`, `simp_all`, `simpa` and `dsimp` calls whose configuration turns on
   `arith`.
-- `n_dec_rfl`: the `rfl` tactic, and declarations whose body is the term `rfl`.
+- `n_dec_rfl`: the `rfl` tactic, and declarations whose body is the term `rfl`, ignoring the same
+  wrappers as `proof_mode`.
 
 ### `sorry_axiom`
 - `n_sorry`, `n_admit`: `sorry` (tactic or term) and `admit`.
@@ -220,7 +232,8 @@ Unused imports as `lake shake` finds them. See `LeanMetrics.Shake`.
 - `n_impmin_tactic_imports`: imports of tactic modules (`Mathlib.Tactic.*`, `Lean.Elab.Tactic.*`).
 - `impmin_uses_import_mathlib`: whether any module imports from `Mathlib`.
 - `n_impmin_import_cone_size`: modules reachable from the project's imports.
-- Details: `remove_by_module`, `add_by_module`.
+- Details: `remove_by_module`, `add_by_module`. Directives are rendered for each file's module
+  mode: a file without a `module` header gets plain `import`, never `public import`.
 
 ### `dep_graph`
 Nodes are the authored declarations (see `LeanMetrics.Authored`). An edge runs from `d` to `u` when
@@ -242,6 +255,8 @@ Columns:
 - `longest_pole`: edges on the longest dependency chain. A cycle counts as one step.
 - `root`: the main result, the declaration with the largest cost (next column) among those given
   with `--main`, or among the declarations nothing depends on when none are given.
+- `root_id`: the same declaration's unique Lean name, retaining private-name mangling. Both
+  `root` and `root_id` are empty strings when there is no candidate.
 - `cost_root_log10`: `log10` of the main result's cost, the size of its dependency tree fully
   unrolled (`cost(v) = 1 + Σ cost(dependencies)`).
 - `reachable_from_root`: declarations the main result depends on, itself included.
@@ -251,11 +266,18 @@ Columns:
   come from compiled bodies, where structural and well-founded recursion no longer name the
   functions they call, so only `unsafe` definitions produce one. A self-reference is not an edge.
 - `n_internal_theorems`, `n_internal_defs`, `n_internal_instances`: nodes by kind. Instances are
-  classified first, then theorems, then definitions (`def`, `opaque`, inductive types). Other nodes,
+  classified first, including local instance declarations whose registrations are not exported,
+  then theorems, then definitions (`def`, `opaque`, inductive types). Other nodes,
   such as constructors and axioms, are in none of the three.
 - `n_theorems_unused`, `n_defs_unused`, `n_instances_unused`: nodes nothing depends on.
 - `n_theorems_single_use`: theorems exactly one declaration depends on.
 - `n_defs_no_theorem_user`: definitions no theorem mentions.
+
+Details contain `nodes` and `edges`. Each node has `id` (unique Lean name), `name` (readable name),
+`module`, and `internal` (whether it belongs to the measured project). Isolated internal nodes
+are included. Each edge is `[dependency_id, user_id]`; external leaves are included in detail
+but excluded from `n_graph_decls` and `n_edges`. Private declarations in different modules can
+share a readable name, so use IDs to reconstruct the graph.
 
 ### `docstrings`
 - `n_doc_decls`, `n_doc_documented`: authored declarations, and those with a docstring.

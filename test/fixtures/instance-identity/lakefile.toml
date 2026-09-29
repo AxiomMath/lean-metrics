@@ -1,0 +1,5 @@
+name = "instance-identity"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

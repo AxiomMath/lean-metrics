@@ -123,7 +123,7 @@ def decideUsage : Metric where
       nodesOfKind ``Tactic.simpAll c ++ nodesOfKind ``Tactic.simpa c ++
       nodesOfKind ``Tactic.dsimp c) #[]
     let termRfl := ctx.declarations.filter fun d =>
-      (bodyOf? d).any fun b => b.isIdent && b.getId == `rfl
+      (bodyOf? d).any fun b => let b := unwrapProof b; b.isIdent && b.getId == `rfl
     let nNativeDecide := cmds.foldl (· + countKind ``Tactic.nativeDecide ·) 0
     return { columns := #[
       ("n_dec_decide", toJson (decides.size - nKernel - nNative)), ("n_dec_kernel", toJson nKernel),

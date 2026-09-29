@@ -8,6 +8,8 @@ module
 public import LeanMetrics.Basic
 public import LeanMetrics.Authored
 import LeanMetrics.Stats
+import LeanMetrics.Syntax
+import Lean.Elab.DeclarationRange
 import Lean.Meta.Instances
 import Lean.ProjFns
 import Lean.Util.Recognizers
@@ -185,13 +187,32 @@ private def log10Nat (x : Nat) : Float :=
   let shift := x.log2 - min x.log2 52
   (x >>> shift).toFloat.log10 + shift.toFloat * Float.log10 2
 
+/-- Local instance registrations disappear on import. Recover their declaration identities
+from source selection ranges, including anonymous and private instances. -/
+private def sourceInstances (ctx : Context) : NameSet := Id.run do
+  let mut positions : Std.HashSet (Name × Nat × Nat) := {}
+  for file in ctx.files do
+    for cmd in file.commands do
+      for decl in declarationsOf cmd do
+        if decl.isOfKind ``Parser.Command.instance then
+          if let some pos := (Elab.getDeclarationSelectionRef decl).getPos? then
+            let p := file.fileMap.toPosition pos
+            positions := positions.insert (file.module, p.line, p.column)
+  let mut names : NameSet := {}
+  for n in ctx.authored do
+    if let some mod := ctx.moduleOf? n then
+      if let some ranges := declRangeExt.find? ctx.env n then
+        let p := ranges.selectionRange.pos
+        if positions.contains (mod, p.line, p.column) then names := names.insert n
+  return names
+
 /-- Metric `dep_graph`: Shape of the declaration dependency graph: degrees, roots and leaves,
 longest chain, and sharing of sub-results. -/
 def depGraph : Metric where
   name := "dep_graph"
   description := "shape of the declaration dependency graph: degrees, roots and leaves, longest \
     chain, and sharing of sub-results"
-  needsSource := false
+  needsSource := true
   run ctx := do
     let g := depGraphOf ctx
     let idx : Std.HashMap Name Nat := g.internal.foldl (fun m n => m.insert n m.size) {}
@@ -246,8 +267,9 @@ def depGraph : Metric where
     let extAll : NameSet := ext.foldl (fun s e => e.foldl (·.insert ·) s) {}
     let rootCost := root?.map (cost[·]!) |>.getD 0
     -- instances first: Prop-valued ones are theorems, and every instance is also a definition
+    let declaredInstances := sourceInstances ctx
     let kinds := g.internal.map fun c =>
-      if isInstanceCore ctx.env c then "instance"
+      if declaredInstances.contains c || isInstanceCore ctx.env c then "instance"
       else match ctx.env.find? c with
         | some (.thmInfo _) => "theorem"
         | some (.defnInfo _) | some (.opaqueInfo _) | some (.inductInfo _) => "def"
@@ -266,6 +288,7 @@ def depGraph : Metric where
       ("ext_deps_per_decl_mean", mean (ext.map (·.size)) 2), ("n_ext_consts", toJson extAll.size),
       ("longest_pole", toJson (maximum depth)),
       ("root", toJson ((root?.map (displayName g.internal[·]!)).getD "")),
+      ("root_id", toJson ((root?.map (toString g.internal[·]!)).getD "")),
       ("cost_root_log10", if rootCost == 0 then .null else decimal (log10Nat rootCost)),
       ("reachable_from_root", toJson reachable),
       ("compression_log10", if rootCost == 0 || reachable == 0 then .null
@@ -280,7 +303,14 @@ def depGraph : Metric where
       ("n_theorems_single_use", count fun i => kind i == "theorem" && inDeg[i]! == 1),
       ("n_defs_unused", count fun i => kind i == "def" && inDeg[i]! == 0),
       ("n_defs_no_theorem_user", count fun i => kind i == "def" && !usedByTheorem.contains i)]
-    let edges := g.edges.map fun (d, u) => Json.arr #[displayName d, displayName u]
-    return { columns, details := Json.mkObj [("edges", Json.arr edges)] }
+    -- Private declarations can have the same user name in different modules. Preserve Lean's
+    -- unique names as IDs and keep their readable names separately, including isolated nodes.
+    let nodeNames := g.internal.foldl (·.insert ·) extAll
+    let nodes := nodeNames.foldl (init := #[]) fun acc name => acc.push <| Json.mkObj [
+      ("id", toJson name.toString), ("name", toJson (displayName name)),
+      ("module", toJson ((ctx.moduleOf? name).map toString |>.getD "")),
+      ("internal", toJson (idx.contains name))]
+    let edges := g.edges.map fun (d, u) => Json.arr #[toJson d.toString, toJson u.toString]
+    return { columns, details := Json.mkObj [("nodes", Json.arr nodes), ("edges", Json.arr edges)] }
 
 end LeanMetrics

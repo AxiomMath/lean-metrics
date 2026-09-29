@@ -8,6 +8,7 @@ module
 public import LeanMetrics.Basic
 import LeanMetrics.Stats
 import LeanMetrics.Syntax
+import Lean.Elab.PreDefinition.WF.Eqns
 
 /-! # Declarations
 
@@ -75,7 +76,7 @@ def declarations : Metric where
         counts := counts.insert k (counts.getD k 0 + 1)
         if k != "example" && (signatureBinders d).any isImplicitBinder then
           nImplicit := nImplicit + 1
-    -- `deriving` clauses and `attribute [instance]` commands also declare instances
+    -- `deriving` creates instances; `attribute [instance]` only registers existing constants.
     let mut nDerived := 0
     let mut nAttrInstance := 0
     for f in ctx.files do
@@ -90,7 +91,7 @@ def declarations : Metric where
         for a in nodesOfKind ``Command.attribute c do
           if (attributesUnder a).contains `instance then
             nAttrInstance := nAttrInstance + 1
-    counts := counts.insert "instance" (counts.getD "instance" 0 + nDerived + nAttrInstance)
+    counts := counts.insert "instance" (counts.getD "instance" 0 + nDerived)
     let n (k : String) := counts.getD k 0
     let nDefLike := defLike.foldl (· + n ·) 0
     return { columns :=
@@ -99,7 +100,8 @@ def declarations : Metric where
       #[("n_def_like", toJson nDefLike),
         ("def_like_to_theorem_ratio", ratio nDefLike (n "theorem")),
         ("n_decls_implicit_args", toJson nImplicit), ("n_new_classes", toJson (n "class")),
-        ("n_new_instances", toJson (n "instance"))] }
+        ("n_new_instances", toJson (n "instance")),
+        ("n_instance_attribute_commands", toJson nAttrInstance)] }
 
 /-- Metric `implicit_args`: Binder groups in declaration signatures, by kind. -/
 def implicitArgs : Metric where
@@ -125,7 +127,7 @@ def proofMode : Metric where
   needsSource := true
   run ctx := do
     let bodies := ctx.declarations.filter isTheorem |>.filterMap bodyOf?
-    let nTactic := (bodies.filter isTacticBody).size
+    let nTactic := (bodies.filter (isTacticBody ∘ unwrapProof)).size
     let nTerm := bodies.size - nTactic
     return { columns := #[("n_pm_term", toJson nTerm), ("n_pm_tactic", toJson nTactic),
       ("pm_term_ratio", ratio nTerm bodies.size)] }
@@ -153,18 +155,20 @@ def reducibility : Metric where
       ("red_irreducible_per_def", ratio nIrreducible nDef 4),
       ("red_abbrev_per_def", ratio nAbbrev nDef 4)] }
 
-/-- Metric `recursion_style`: `termination_by` and `decreasing_by` clauses. -/
+/-- Metric `recursion_style`: Source termination annotations and authored definitions Lean
+compiled with well-founded recursion, including inferred measures and counting each once. -/
 def recursionStyle : Metric where
   name := "recursion_style"
-  description := "`termination_by` and `decreasing_by` clauses"
+  description := "termination annotations and definitions compiled with well-founded recursion"
   needsSource := true
   run ctx := do
     let cmds := ctx.files.foldl (· ++ ·.commands) #[]
     let sum (k : SyntaxNodeKind) := cmds.foldl (· + countKind k ·) 0
     let t := sum ``Termination.terminationBy
     let d := sum ``Termination.decreasingBy
+    let wf := (ctx.authored.filter fun n => (Elab.WF.eqnInfoExt.find? ctx.env n).isSome).size
     return { columns := #[("n_rec_termination_by", toJson t), ("n_rec_decreasing_by", toJson d),
-      ("n_rec_well_founded", toJson (t + d)),
-      ("rec_uses_well_founded", toJson (decide (t + d > 0)))] }
+      ("n_rec_well_founded", toJson wf),
+      ("rec_uses_well_founded", toJson (decide (wf > 0)))] }
 
 end LeanMetrics
