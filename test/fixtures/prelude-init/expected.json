@@ -1,0 +1,16 @@
+{
+  "metrics": {
+    "import_minimizability": {
+      "n_impmin_imports": 1,
+      "n_impmin_removable_imports": 1,
+      "n_impmin_imports_to_add": 0
+    },
+    "import_discipline": {
+      "n_imp_import": 1,
+      "n_imp_distinct": 1
+    },
+    "imports": {
+      "nonmathlib_imports_per_file": 1
+    }
+  }
+}

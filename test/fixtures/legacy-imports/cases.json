@@ -1,0 +1,28 @@
+[
+  {
+    "args": [
+      "--module",
+      "Case",
+      "--metric",
+      "import_minimizability",
+      "--details"
+    ],
+    "expect": {
+      "details": {
+        "import_minimizability": {
+          "remove_by_module": {
+            "Case": [
+              "import Umbrella"
+            ]
+          },
+          "add_by_module": {
+            "Case": [
+              "import Kept"
+            ]
+          }
+        }
+      }
+    },
+    "exit": 0
+  }
+]

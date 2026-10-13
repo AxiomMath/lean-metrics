@@ -1,0 +1,4 @@
+name = "self-recursion"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

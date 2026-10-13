@@ -1,0 +1,4 @@
+name = "initializer-output"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

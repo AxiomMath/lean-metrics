@@ -1,0 +1,4 @@
+name = "deriving-in"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

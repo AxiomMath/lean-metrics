@@ -1,0 +1,15 @@
+import Lean
+
+open Lean
+
+namespace Batteries.Tactic.Lemma
+
+syntax (name := lemmaCmd) declModifiers group("lemma " declId ppIndent(declSig) declVal) : command
+
+@[macro lemmaCmd] def expandLemma : Macro := fun stx =>
+  let stx := stx.modifyArg 1 fun stx =>
+    let stx := stx.modifyArg 0 (mkAtomFrom · "theorem" (canonical := true))
+    stx.setKind ``Parser.Command.theorem
+  pure <| stx.setKind ``Parser.Command.declaration
+
+end Batteries.Tactic.Lemma

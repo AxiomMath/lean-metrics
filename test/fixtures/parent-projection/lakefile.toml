@@ -1,0 +1,5 @@
+name = "parent-projection"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

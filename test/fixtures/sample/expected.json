@@ -1,0 +1,134 @@
+{
+  "metrics": {
+    "comments": {
+      "n_comments": 3,
+      "n_doc_comments": 3
+    },
+    "source_shape": {
+      "shp_theorems_per_file": 2.6,
+      "shp_frac_files_module_doc": 0.2,
+      "shp_decl_name_len_mean": 4.3,
+      "shp_decl_name_len_max": 11
+    },
+    "declarations": {
+      "n_decls": 28,
+      "n_theorem": 13,
+      "n_def": 7,
+      "n_abbrev": 1,
+      "n_instance": 2,
+      "n_structure": 1,
+      "n_class": 1,
+      "n_inductive": 1,
+      "n_axiom": 1,
+      "n_opaque": 1,
+      "n_example": 1,
+      "n_def_like": 13,
+      "n_decls_implicit_args": 2
+    },
+    "implicit_args": {
+      "n_ia_explicit": 15,
+      "n_ia_implicit": 1,
+      "n_ia_strict": 1,
+      "n_ia_inst": 1
+    },
+    "proof_mode": {
+      "n_pm_term": 6,
+      "n_pm_tactic": 7
+    },
+    "reducibility": {
+      "n_red_irreducible": 0,
+      "n_red_reducible": 1,
+      "n_red_abbrev": 1,
+      "n_red_def": 7
+    },
+    "recursion_style": {
+      "n_rec_termination_by": 1,
+      "n_rec_decreasing_by": 1
+    },
+    "tactics": {
+      "n_tactic_calls": 10,
+      "n_distinct_tactics": 7,
+      "frac_by_automation": 0.4,
+      "n_set_option": 2,
+      "tactic_simp": 1,
+      "tactic_omega": 1,
+      "tactic_decide": 2
+    },
+    "decide_usage": {
+      "n_dec_decide": 1,
+      "n_dec_kernel": 1,
+      "n_dec_native": 0,
+      "n_dec_native_decide": 0,
+      "n_dec_rfl": 3
+    },
+    "sorry_axiom": {
+      "n_sorry": 0,
+      "n_sorryax_axiom": 1
+    },
+    "proof_size": {
+      "ps_n_theorems": 13,
+      "ps_calls_max": 2
+    },
+    "proof_structure": {
+      "n_ps_have": 1,
+      "n_ps_calc": 1,
+      "n_ps_destructuring": 1,
+      "n_ps_steps": 3
+    },
+    "proof_length": {
+      "n_proofs": 13,
+      "proof_loc_max": 2,
+      "proof_loc_median": 1
+    },
+    "set_options": {
+      "n_setopt_total": 2,
+      "n_maxHeartbeats": 1,
+      "n_linter_disable": 1,
+      "n_setopt_distinct_names": 2
+    },
+    "attributes": {
+      "n_attributes": 3,
+      "n_attributes_other": 1,
+      "attr_simp": 1,
+      "attr_reducible": 1
+    },
+    "metaprogramming": {
+      "n_macro": 1,
+      "n_elab_rules": 1,
+      "n_syntax": 2,
+      "n_eval": 1,
+      "n_open_meta": 2
+    },
+    "namespaces": {
+      "n_ns_cmds": 2,
+      "n_ns_distinct": 2,
+      "n_ns_max_depth": 2
+    },
+    "import_discipline": {
+      "n_imp_import": 8,
+      "n_imp_mathlib_wholesale": 0,
+      "n_imp_distinct": 5
+    },
+    "import_minimizability": {
+      "n_impmin_imports": 8,
+      "n_impmin_removable_imports": 3,
+      "n_impmin_imports_to_add": 2,
+      "n_impmin_removable_by_constants": 7,
+      "n_impmin_unused_by_constants": 7
+    },
+    "docstrings": {
+      "n_doc_documented": 2
+    },
+    "warnings": {
+      "n_warnings": 1,
+      "n_warn_unused_variable": 1,
+      "warnings_complete": true
+    }
+  },
+  "diagnostics": {
+    "reparsed_files": [
+      "Sample/Lemma.lean"
+    ],
+    "scoping_command_errors": []
+  }
+}

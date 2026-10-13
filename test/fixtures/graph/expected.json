@@ -1,0 +1,31 @@
+{
+  "metrics": {
+    "dep_graph": {
+      "n_graph_decls": 5,
+      "n_edges": 6,
+      "out_deg_mean": 1.2,
+      "out_deg_median": 1,
+      "out_deg_max": 2,
+      "in_deg_mean": 1.2,
+      "in_deg_median": 1,
+      "in_deg_max": 2,
+      "n_roots": 1,
+      "n_leaves": 1,
+      "n_ext_consts": 0,
+      "longest_pole": 4,
+      "root": "u",
+      "cost_root_log10": 1,
+      "reachable_from_root": 5,
+      "compression_log10": 0.301,
+      "cost_max_log10": 1,
+      "has_cycle": false,
+      "n_internal_theorems": 2,
+      "n_internal_defs": 3,
+      "n_internal_instances": 0,
+      "n_theorems_unused": 1,
+      "n_theorems_single_use": 1,
+      "n_defs_unused": 0,
+      "n_defs_no_theorem_user": 2
+    }
+  }
+}

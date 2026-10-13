@@ -1,0 +1,4 @@
+name = "scoped-reparse"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

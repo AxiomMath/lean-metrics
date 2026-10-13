@@ -1,0 +1,4 @@
+name = "same-position"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

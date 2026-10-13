@@ -1,0 +1,66 @@
+[
+  {
+    "args": [
+      "--metric",
+      "dep_graph",
+      "--main",
+      "t"
+    ],
+    "exit": 0,
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "root": "t",
+          "cost_root_log10": 0.699,
+          "reachable_from_root": 4,
+          "compression_log10": 0.097
+        }
+      }
+    }
+  },
+  {
+    "args": [
+      "--metric",
+      "dep_graph",
+      "--main",
+      "t,u"
+    ],
+    "exit": 0,
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "root": "u",
+          "reachable_from_root": 5
+        }
+      }
+    }
+  },
+  {
+    "args": [
+      "--metric",
+      "dep_graph",
+      "--main",
+      "nope"
+    ],
+    "exit": 2
+  },
+  {
+    "args": [
+      "--metric",
+      "dep_graph",
+      "--main",
+      "nope",
+      "--keep-going"
+    ],
+    "exit": 2
+  },
+  {
+    "args": [
+      "--metric",
+      "loc",
+      "--main",
+      "nope"
+    ],
+    "exit": 2
+  }
+]

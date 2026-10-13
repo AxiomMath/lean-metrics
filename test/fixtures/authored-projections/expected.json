@@ -1,0 +1,20 @@
+{
+  "metrics": {
+    "dep_graph": {
+      "n_graph_decls": 3,
+      "n_edges": 3,
+      "longest_pole": 2,
+      "n_internal_defs": 2,
+      "n_internal_theorems": 1
+    },
+    "docstrings": {
+      "n_doc_decls": 3,
+      "n_doc_documented": 1,
+      "doc_coverage": 0.333
+    }
+  },
+  "schema_version": 2,
+  "tool": {
+    "version": "0.2.0"
+  }
+}

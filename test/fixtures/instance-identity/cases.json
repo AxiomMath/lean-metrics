@@ -1,0 +1,19 @@
+[
+  {
+    "args": [
+      "--metric",
+      "dep_graph"
+    ],
+    "expect": {
+      "metrics": {
+        "dep_graph": {
+          "n_graph_decls": 6,
+          "n_internal_instances": 4,
+          "n_internal_defs": 2,
+          "n_internal_theorems": 0
+        }
+      }
+    },
+    "exit": 0
+  }
+]

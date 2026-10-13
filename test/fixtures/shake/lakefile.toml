@@ -1,0 +1,5 @@
+name = "shake"
+defaultTargets = ["Shk"]
+
+[[lean_lib]]
+name = "Shk"

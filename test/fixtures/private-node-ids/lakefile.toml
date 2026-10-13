@@ -1,0 +1,5 @@
+name = "private-node-ids"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

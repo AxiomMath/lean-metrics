@@ -1,0 +1,19 @@
+{
+  "metrics": {
+    "declarations": {
+      "n_decls": 6,
+      "n_class": 2,
+      "n_def": 1,
+      "n_instance": 3,
+      "n_new_instances": 3,
+      "n_def_like": 6,
+      "n_instance_attribute_commands": 2
+    },
+    "dep_graph": {
+      "n_graph_decls": 6,
+      "n_internal_instances": 4,
+      "n_internal_defs": 2,
+      "n_internal_theorems": 0
+    }
+  }
+}

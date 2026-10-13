@@ -1,0 +1,5 @@
+name = "authored-projections"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

@@ -1,0 +1,10 @@
+{
+  "metrics": {
+    "comments": {"n_comments": 2, "comment_loc": 3},
+    "source_shape": {"shp_line_len_max": 50, "shp_n_type_ge1": 3},
+    "declarations": {"n_instance": 5, "n_class": 1, "n_inductive": 2},
+    "decide_usage": {"n_dec_decide": 1, "n_dec_kernel": 0, "n_dec_simp_arith": 0},
+    "namespaces": {"n_ns_cmds": 3, "n_ns_distinct": 2, "n_ns_max_depth": 2}
+  },
+  "diagnostics": {"commands_with_parse_errors": []}
+}

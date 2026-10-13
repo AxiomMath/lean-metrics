@@ -1,0 +1,21 @@
+[
+  {
+    "args": [
+      "--metric",
+      "import_minimizability",
+      "--details"
+    ],
+    "exit": 0,
+    "expect": {
+      "details": {
+        "import_minimizability": {
+          "remove_by_module": {
+            "Case.B": [
+              "public import Case.A"
+            ]
+          }
+        }
+      }
+    }
+  }
+]

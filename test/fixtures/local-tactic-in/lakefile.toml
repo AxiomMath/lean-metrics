@@ -1,0 +1,4 @@
+name = "local-tactic-in"
+defaultTargets = ["Case"]
+[[lean_lib]]
+name = "Case"

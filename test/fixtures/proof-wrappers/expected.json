@@ -1,0 +1,19 @@
+{
+  "metrics": {
+    "proof_mode": {
+      "n_pm_term": 5,
+      "n_pm_tactic": 5,
+      "pm_term_ratio": 0.5
+    },
+    "decide_usage": {
+      "n_dec_rfl": 10
+    },
+    "tactics": {
+      "n_tactic_calls": 5
+    },
+    "proof_size": {
+      "ps_calls_max": 1,
+      "ps_by_depth_max": 1
+    }
+  }
+}

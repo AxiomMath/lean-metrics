@@ -1,0 +1,5 @@
+name = "end-dotted"
+defaultTargets = ["Case"]
+
+[[lean_lib]]
+name = "Case"

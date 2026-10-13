@@ -1,0 +1,10 @@
+{
+  "metrics": {
+    "recursion_style": {
+      "n_rec_termination_by": 2,
+      "n_rec_decreasing_by": 1,
+      "n_rec_well_founded": 2,
+      "rec_uses_well_founded": true
+    }
+  }
+}

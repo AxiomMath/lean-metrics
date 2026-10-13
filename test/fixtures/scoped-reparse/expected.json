@@ -1,0 +1,8 @@
+{
+  "diagnostics": {
+    "reparsed_files": [
+      "Case/A.lean"
+    ],
+    "commands_with_parse_errors": []
+  }
+}
